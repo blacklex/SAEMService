@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.Usuarios" optimistic-lock="version" table="Usuarios">
+    <id name="nombreUsuario" type="string">
+      <column length="20" name="nombre_usuario"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="tipoUsuario" type="string">
+      <column length="15" name="tipo_usuario" not-null="true"/>
+    </property>
+    <property name="clave" type="string">
+      <column length="45" name="clave" not-null="true"/>
+    </property>
+    <property name="fechaRegistro" type="timestamp">
+      <column length="19" name="fecha_registro" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" cascade="delete" lazy="true" name="pacienteses" table="Pacientes">
+      <key>
+        <column length="20" name="Usuarios_nombre_usuario" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.Pacientes"/>
+    </set>
+    <set fetch="select" inverse="true" cascade="delete" lazy="true" name="administradoreses" table="Administradores">
+      <key>
+        <column length="20" name="Usuarios_nombre_usuario" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.Administradores"/>
+    </set>
+    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="hospitaleses" table="Hospitales">
+      <key>
+        <column length="20" name="Usuarios_nombre_usuario" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.Hospitales"/>
+    </set>
+  </class>
+</hibernate-mapping>

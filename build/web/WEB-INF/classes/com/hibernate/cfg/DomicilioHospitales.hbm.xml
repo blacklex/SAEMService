@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.DomicilioHospitales" optimistic-lock="version" table="Domicilio_Hospitales">
+    <id name="id" type="java.lang.Long">
+      <column name="id"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="com.hibernate.model.Hospitales" fetch="select" name="hospitales">
+      <column length="20" name="Hospitales_codigo_hospital" not-null="true"/>
+    </many-to-one>
+    <property name="calle" type="string">
+      <column length="45" name="calle" not-null="true"/>
+    </property>
+    <property name="numero" type="string">
+      <column length="5" name="numero" not-null="true"/>
+    </property>
+    <property name="colonia" type="string">
+      <column length="45" name="colonia" not-null="true"/>
+    </property>
+    <property name="delegacion" type="string">
+      <column length="30" name="delegacion" not-null="true"/>
+    </property>
+    <property name="entidadFederativa" type="string">
+      <column length="45" name="entidad_federativa" not-null="true"/>
+    </property>
+    <property name="codigoPostal" type="string">
+      <column length="5" name="codigo_postal" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

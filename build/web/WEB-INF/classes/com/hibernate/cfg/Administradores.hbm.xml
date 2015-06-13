@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.Administradores" optimistic-lock="version" table="Administradores">
+    <id name="telParticular" type="string">
+      <column length="15" name="tel_particular"/>
+      <generator class="assigned"/>
+    </id>
+    <many-to-one class="com.hibernate.model.Usuarios" fetch="select" name="usuarios">
+      <column length="20" name="Usuarios_nombre_usuario" not-null="true"/>
+    </many-to-one>
+    <property name="nombre" type="string">
+      <column length="20" name="nombre" not-null="true"/>
+    </property>
+    <property name="apellidoPaterno" type="string">
+      <column length="20" name="apellido_paterno" not-null="true"/>
+    </property>
+    <property name="apellidoMaterno" type="string">
+      <column length="20" name="apellido_materno" not-null="true"/>
+    </property>
+    <property name="correo" type="string">
+      <column length="45" name="correo"/>
+    </property>
+    <property name="imagen" type="binary">
+      <column name="imagen"/>
+    </property>
+    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="domicilioAdministradoreses" table="Domicilio_Administradores">
+      <key>
+        <column length="15" name="Administradores_tel_particular" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.DomicilioAdministradores"/>
+    </set>
+  </class>
+</hibernate-mapping>

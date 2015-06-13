@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.Medicacion" optimistic-lock="version" table="Medicacion">
+    <id name="id" type="java.lang.Long">
+      <column name="id"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="com.hibernate.model.DatosClinicos" fetch="select" name="datosClinicos">
+      <column name="Datos_Clinicos_no_historial" not-null="true"/>
+    </many-to-one>
+    <property name="nombreMedicamento" type="string">
+      <column length="45" name="nombre_medicamento"/>
+    </property>
+    <property name="frecuencia" type="string">
+      <column length="45" name="frecuencia"/>
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.Pacientes" optimistic-lock="version" table="Pacientes">
+    <id name="nss" type="string">
+      <column length="15" name="nss"/>
+      <generator class="assigned"/>
+    </id>
+    <many-to-one class="com.hibernate.model.Hospitales" fetch="select" name="hospitales">
+      <column length="20" name="Hospitales_codigo_hospital" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.hibernate.model.Usuarios" fetch="select" name="usuarios">
+      <column length="20" name="Usuarios_nombre_usuario" not-null="true"/>
+    </many-to-one>
+    <property name="nombre" type="string">
+      <column length="20" name="nombre" not-null="true"/>
+    </property>
+    <property name="apellidoPaterno" type="string">
+      <column length="20" name="apellido_paterno" not-null="true"/>
+    </property>
+    <property name="apellidoMaterno" type="string">
+      <column length="20" name="apellido_materno" not-null="true"/>
+    </property>
+    <property name="unidadMedica" type="string">
+      <column length="4" name="unidad_medica"/>
+    </property>
+    <property name="noConsultorio" type="string">
+      <column length="4" name="no_consultorio"/>
+    </property>
+    <property name="imagen" type="binary">
+      <column name="imagen"/>
+    </property>
+    <set fetch="select" cascade="delete"  inverse="true" lazy="true" name="domicilioPacienteses" table="Domicilio_Pacientes">
+      <key>
+        <column length="15" name="Pacientes_nss" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.DomicilioPacientes"/>
+    </set>
+    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="peticionesEntranteses" table="Peticiones_Entrantes">
+      <key>
+        <column length="15" name="Pacientes_nss" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.PeticionesEntrantes"/>
+    </set>
+    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="peticionesSalienteses" table="Peticiones_Salientes">
+      <key>
+        <column length="15" name="Pacientes_nss" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.PeticionesSalientes"/>
+    </set>
+    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="telefonosPacienteses" table="Telefonos_Pacientes">
+      <key>
+        <column length="15" name="Pacientes_nss" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.TelefonosPacientes"/>
+    </set>
+    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="datosClinicoses" table="Datos_Clinicos">
+      <key>
+        <column length="15" name="Pacientes_nss" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.DatosClinicos"/>
+    </set>
+    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="datosPersonaleses" table="Datos_Personales">
+      <key>
+        <column length="15" name="Pacientes_nss" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.DatosPersonales"/>
+    </set>
+    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="contactoses" table="Contactos">
+      <key>
+        <column length="15" name="Pacientes_nss" not-null="true"/>
+      </key>
+      <one-to-many class="com.hibernate.model.Contactos"/>
+    </set>
+  </class>
+</hibernate-mapping>
