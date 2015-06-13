@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.datasource">TT1ServicioMedicoBD</property>
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <!--<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+            <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+            <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/SAEMBD?zeroDateTimeBehavior=convertToNull</property>
+            <property name="hibernate.connection.username">root</property>
+            <property name="hibernate.connection.password">123456</property>-->
+        <mapping resource="com/hibernate/cfg/PeticionesEntrantes.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Pacientes.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Medicacion.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Alergias.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Especialidades.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/TelefonosPacientes.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Discapacidades.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Usuarios.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/DatosPersonales.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Administradores.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/DomicilioAdministradores.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/DomicilioPacientes.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/DomicilioHospitales.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Directivo.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Contactos.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/DatosClinicos.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/PeticionesSalientes.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Cirugias.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/EnfermedadesCronicas.hbm.xml"/>
+        <mapping resource="com/hibernate/cfg/Hospitales.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>

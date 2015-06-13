@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.Especialidades" optimistic-lock="version" table="Especialidades">
+    <id name="noEspecialidad" type="int">
+      <column name="no_especialidad"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="nombreEspecialidad" type="string">
+      <column length="45" name="nombre_especialidad"/>
+    </property>
+    <set fetch="select" cascade="delete" inverse="false" lazy="true" name="hospitaleses" table="Especialidades_has_Hospitales">
+      <key>
+        <column name="Especialidades_no_especialidad" not-null="true"/>
+      </key>
+      <many-to-many entity-name="com.hibernate.model.Hospitales">
+        <column length="20" name="Hospitales_codigo_hospital" not-null="true"/>
+      </many-to-many>
+    </set>
+  </class>
+</hibernate-mapping>

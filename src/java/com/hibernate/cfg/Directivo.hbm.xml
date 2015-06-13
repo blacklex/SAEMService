@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.Directivo" optimistic-lock="version" table="Directivo">
+    <id name="id" type="java.lang.Long">
+      <column name="id"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="com.hibernate.model.Hospitales" fetch="select" name="hospitales">
+      <column length="20" name="Hospitales_codigo_hospital" not-null="true"/>
+    </many-to-one>
+    <property name="nombre" type="string">
+      <column length="20" name="nombre" not-null="true"/>
+    </property>
+    <property name="telParticular" type="string">
+      <column length="15" name="tel_particular" not-null="true"/>
+    </property>
+    <property name="correo" type="string">
+      <column length="45" name="correo"/>
+    </property>
+    <property name="imagen" type="binary">
+      <column name="imagen"/>
+    </property>
+  </class>
+</hibernate-mapping>

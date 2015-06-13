@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.Contactos" optimistic-lock="version" table="Contactos">
+    <id name="id" type="java.lang.Long">
+      <column name="id"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="com.hibernate.model.Pacientes" fetch="select" name="pacientes">
+      <column length="15" name="Pacientes_nss" not-null="true"/>
+    </many-to-one>
+    <property name="nombre" type="string">
+      <column length="20" name="nombre" not-null="true"/>
+    </property>
+    <property name="apellidoPaterno" type="string">
+      <column length="20" name="apellido_paterno" not-null="true"/>
+    </property>
+    <property name="apellidoMaterno" type="string">
+      <column length="20" name="apellido_materno" not-null="true"/>
+    </property>
+    <property name="parentesco" type="string">
+      <column length="10" name="parentesco" not-null="true"/>
+    </property>
+    <property name="celular" type="string">
+      <column length="20" name="celular" not-null="true"/>
+    </property>
+    <property name="facebook" type="string">
+      <column length="100" name="facebook"/>
+    </property>
+    <property name="correo" type="string">
+      <column length="30" name="correo"/>
+    </property>
+  </class>
+</hibernate-mapping>

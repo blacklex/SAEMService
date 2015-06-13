@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/06/2015 02:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="SAEMBD" name="com.hibernate.model.PeticionesSalientes" optimistic-lock="version" table="Peticiones_Salientes">
+    <id name="idPeticionesSalientes" type="string">
+      <column length="20" name="idPeticiones_Salientes"/>
+      <generator class="assigned"/>
+    </id>
+    <many-to-one class="com.hibernate.model.Hospitales" fetch="select" name="hospitales">
+      <column length="20" name="Hospitales_codigo_hospital" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.hibernate.model.Pacientes" fetch="select" name="pacientes">
+      <column length="15" name="Pacientes_nss" not-null="true"/>
+    </many-to-one>
+    <property name="fechaRegistro" type="timestamp">
+      <column length="19" name="fecha_registro" not-null="true"/>
+    </property>
+    <property name="estatus" type="string">
+      <column length="4" name="estatus" not-null="true"/>
+    </property>
+    <property name="latitudPaciente" type="string">
+      <column length="25" name="latitud_paciente" not-null="true"/>
+    </property>
+    <property name="longitudPaciente" type="string">
+      <column length="25" name="longitud_paciente" not-null="true"/>
+    </property>
+    <property name="prioridad" type="string">
+      <column length="6" name="prioridad" not-null="true"/>
+    </property>
+    <property name="comentario" type="string">
+      <column length="45" name="comentario"/>
+    </property>
+  </class>
+</hibernate-mapping>

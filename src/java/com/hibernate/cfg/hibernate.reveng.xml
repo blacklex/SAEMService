@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="SAEMBD"/>
+  <table-filter match-name="Peticiones_Entrantes"/>
+  <table-filter match-name="Domicilio_Hospitales"/>
+  <table-filter match-name="Discapacidades"/>
+  <table-filter match-name="Usuarios"/>
+  <table-filter match-name="Cirugias"/>
+  <table-filter match-name="Alergias"/>
+  <table-filter match-name="Domicilio_Administradores"/>
+  <table-filter match-name="Telefonos_Pacientes"/>
+  <table-filter match-name="Medicacion"/>
+  <table-filter match-name="Pacientes"/>
+  <table-filter match-name="Hospitales"/>
+  <table-filter match-name="Contactos"/>
+  <table-filter match-name="Peticiones_Salientes"/>
+  <table-filter match-name="Datos_Clinicos"/>
+  <table-filter match-name="Especialidades_has_Hospitales"/>
+  <table-filter match-name="Directivo"/>
+  <table-filter match-name="Administradores"/>
+  <table-filter match-name="Datos_Personales"/>
+  <table-filter match-name="Especialidades"/>
+  <table-filter match-name="Enfermedades_Cronicas"/>
+  <table-filter match-name="Domicilio_Pacientes"/>
+</hibernate-reverse-engineering>
