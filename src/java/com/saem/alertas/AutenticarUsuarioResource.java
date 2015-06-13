@@ -51,9 +51,9 @@ public class AutenticarUsuarioResource {
     }
 
     @POST
-    @Path("/mostrarDatosAccesoPaciente")
+    @Path("/auntenticarUsuario")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response acudirAlHospital(@FormParam("nombreUsuario") String nombreUsu, @FormParam("clave") String claveUsu) throws ParseException {
+    public Response auntenticarUsuario(@FormParam("formNombreUsuario") String nombreUsu, @FormParam("formClave") String claveUsu) throws ParseException {
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("\n\nEntro al execute" + formNombreUsuario + "  " + formClave + "  " + formCheckRecordarme);
