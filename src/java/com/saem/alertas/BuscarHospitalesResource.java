@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -38,7 +39,8 @@ import org.json.simple.JSONValue;
 @Path("busquedaHospitales")
 public class BuscarHospitalesResource {
 
-    String ONTOLOGIA = request.getServletContext().getRealPath("/") + "WEB-INF/serviciomedico.owl";
+    @Context private UriInfo context;
+    
     String BASE_URI = "http://www.serviciomedico.org/ontologies/2014/serviciomedico";
     
     String latitudUsuario;
@@ -63,9 +65,7 @@ public class BuscarHospitalesResource {
 
     List listaHospitalesCercanos = new LinkedList();
 
-    @Context
-    private UriInfo context;
-
+    
     /**
      * Creates a new instance of BusquedaHospitalesResource
      */
@@ -81,7 +81,9 @@ public class BuscarHospitalesResource {
     @POST
     @Path("/buscarHospitales")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarHospitales(@FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("distancia") String distanciaUsu) {
+    public Response buscarHospitales(@Context HttpServletRequest servletRequest,@FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("distancia") String distanciaUsu) {
+        String ONTOLOGIA =servletRequest.getSession().getServletContext().getInitParameter("ontologiaurl");
+        
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         latitudUsuario = latUsu;
         longitudUsuario = longUsu;
