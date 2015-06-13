@@ -14,7 +14,6 @@ import com.hibernate.model.Hospitales;
 import com.hibernate.model.Pacientes;
 import com.hibernate.model.PeticionesEntrantes;
 import com.hibernate.model.Usuarios;
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,14 +21,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.PUT;
@@ -101,10 +97,11 @@ public class AcudiarHospitalResource {
         longitudUsuario = longUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
+        Session s2 = com.hibernate.cfg.HibernateUtil.getSession();
         System.out.println("--->Entro a datos pacientes");
         Boolean envioPeticion = false;
         String contactosPaciente = "";
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s2,nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -135,7 +132,7 @@ public class AcudiarHospitalResource {
         idPeticionEntrante = cal.get(Calendar.YEAR) + "" + (cal.get(Calendar.MONTH) + 1) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "" + cal.get(Calendar.MILLISECOND);
 
         //Buscamos el hospital que se encargara del paciente
-        hospital = hospitalDAO.findById(codigoHospital);
+        hospital = hospitalDAO.findById(s2,codigoHospital);
 
         //Fecha de Registro
         Date date = new Date();
@@ -166,7 +163,8 @@ public class AcudiarHospitalResource {
             System.out.println("Hay peticiones echas por el usuario: " + nombreUsuario);
             estatusMensaje = "peticionEnviada";
         }
-
+        s.close();
+        s2.close();
         jb.add("estatusMensaje", estatusMensaje);
         return Response.ok(jb.build()).build();
     }

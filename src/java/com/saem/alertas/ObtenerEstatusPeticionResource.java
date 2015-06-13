@@ -27,6 +27,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Session;
 
 /**
  * REST Web Service
@@ -73,9 +74,10 @@ public class ObtenerEstatusPeticionResource {
     @Path("/obtenerEstatusPeticion")
     @Produces(MediaType.APPLICATION_JSON)
     public Response obtenerEstatusPeticion(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -113,6 +115,7 @@ public class ObtenerEstatusPeticionResource {
             System.out.println("Peticion pediente");
             recuperarEstatus = estatus;
         }
+        s.close();
         jb.add("recuperarEstatus", recuperarEstatus);
         return Response.ok(jb.build()).build();
 

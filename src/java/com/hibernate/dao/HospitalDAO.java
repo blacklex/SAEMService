@@ -75,44 +75,45 @@ public class HospitalDAO extends HibernateUtil {
         }
     }
 
-    public Hospitales findById(String id) {
+    public Hospitales findById(Session s, String id) {
+
         try {
-            Hospitales instance = (Hospitales) getSession().get(
+            Hospitales instance = (Hospitales) s.get(
                     Hospitales.class, id);
-            getSession().close();
+
             return instance;
         } catch (RuntimeException re) {
             //log.error("get failed", re);
             throw re;
         } finally {
-            getSession().close();
+            //getSession().close();
         }
     }
 
-    public List<Hospitales> findAll() {
+    public List<Hospitales> findAll(Session s) {
         try {
             String queryString = "from Hospitales";
-            Query queryObject = getSession().createQuery(queryString);
-            getSession().close();
+            Query queryObject = s.createQuery(queryString);
+            //getSession().close();
             return queryObject.list();
         } catch (RuntimeException re) {
             throw re;
         } finally {
-            getSession().close();
+            //getSession().close();
         }
     }
-    
-    public List<Hospitales> findHospitalLike(String hospitalNombre) {
+
+    public List<Hospitales> findHospitalLike(Session s, String hospitalNombre) {
         try {
-             String queryString="from Hospitales where lower(nombre) LIKE (:searchKeyword)";
-             Query queryObject = getSession().createQuery(queryString);
-             queryObject.setParameter("searchKeyword", "%"+hospitalNombre+"%");
-             return queryObject.list();
-        
+            String queryString = "from Hospitales where lower(nombre) LIKE (:searchKeyword)";
+            Query queryObject = s.createQuery(queryString);
+            queryObject.setParameter("searchKeyword", "%" + hospitalNombre + "%");
+            return queryObject.list();
+
         } catch (RuntimeException re) {
             throw re;
         } finally {
-            getSession().close();
+            //getSession().close();
         }
     }
 
@@ -130,7 +131,7 @@ public class HospitalDAO extends HibernateUtil {
         } catch (Exception e) {
             return false;
         } finally {
-            getSession().close();
+            s.close();
         }
     }
 
@@ -149,7 +150,7 @@ public class HospitalDAO extends HibernateUtil {
         } catch (Exception e) {
             return false;
         } finally {
-            getSession().close();
+            s.close();
         }
     }
 

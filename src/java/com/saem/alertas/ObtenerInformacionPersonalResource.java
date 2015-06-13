@@ -43,6 +43,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Session;
 
 /**
  * REST Web Service
@@ -159,8 +160,9 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarDatosAccesoPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarDatosAccesoPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         System.out.println("--->Entro a datos acceso pacientes");
-        listUsuarios = usuarioDAO.listarById(nombreUsu);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsu);
         JsonObjectBuilder jb = Json.createObjectBuilder();
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
@@ -170,6 +172,7 @@ public class ObtenerInformacionPersonalResource {
             jb.add("clave", clave);
 
         }
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -177,10 +180,11 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarDatosPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarDatosPaciente(@FormParam("nombreUsuario") String nombreUsu) throws IOException {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a datos pacientes");
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -220,6 +224,7 @@ public class ObtenerInformacionPersonalResource {
             jb.add("nombreUsuario", nombreUsuario);
             jb.add("codigoHospital", codigoHospital);
         }
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -227,10 +232,11 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarDatosDireccionPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarDatosDireccionPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a direccion pacientes");
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -266,7 +272,7 @@ public class ObtenerInformacionPersonalResource {
         jb.add("codigoPostal", codigoPostal);
         jb.add("nss", nss);
         jb.add("nombreUsuario", nombreUsuario);
-
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -274,11 +280,12 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarTelefonosPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarTelefonosPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a ver telefonos pacientes");
         String html = "";
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -302,7 +309,7 @@ public class ObtenerInformacionPersonalResource {
         telefonosDelPaciente = html;
         System.out.println(telefonosDelPaciente);
         jb.add("telefonosDelPaciente", telefonosDelPaciente);
-
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -310,10 +317,11 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarDatosPersonalesPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarDatosPersonalesPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a ver datos personales pacientes");
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -369,7 +377,7 @@ public class ObtenerInformacionPersonalResource {
         jb.add("facebook", facebook);
         jb.add("nss", nss);
         jb.add("nombreUsuario", nombreUsuario);
-
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -377,11 +385,12 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarContactosPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarContactosPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a ver contactos pacientes");
         String html = "";
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -436,6 +445,7 @@ public class ObtenerInformacionPersonalResource {
         }
         contactosDelPaciente = html;
         jb.add("contactosDelPaciente", contactosDelPaciente);
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -443,10 +453,11 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarDatosClinicosPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarDatosClinicosPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a ver datos clinicos pacientes");
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -488,7 +499,7 @@ public class ObtenerInformacionPersonalResource {
         jb.add("alcohol", alcohol);
         jb.add("fuma", fuma);
         jb.add("noHistorial", noHistorial);
-
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -496,12 +507,13 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarAlergiasPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarAlergiasPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         JsonArrayBuilder array = Json.createArrayBuilder();
         System.out.println("--->Entro a ver alergias pacientes");
         ArrayList<String> nombreAlergia = new ArrayList<>();
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -526,6 +538,7 @@ public class ObtenerInformacionPersonalResource {
 
         System.out.println(alergias);
         jb.add("alergias", array.build());
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -533,11 +546,12 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarCirugiasPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarCirugiasPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a ver cirugias pacientes");
         ArrayList<String> nombreCirugia = new ArrayList<>();
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -564,6 +578,7 @@ public class ObtenerInformacionPersonalResource {
         jb.add("cirugias", array.build());
 
         System.out.println(cirugias);
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -571,11 +586,12 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarDiscapacidadesPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarDiscapacidadesPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a ver discapacidades pacientes");
         ArrayList<String> nombreDiscapacidad = new ArrayList<>();
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -601,6 +617,7 @@ public class ObtenerInformacionPersonalResource {
 
         jb.add("discapacidades", array.build());
         System.out.println(discapacidades);
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -608,11 +625,12 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarMedicamentosPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarMedicamentosPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a ver medicamentos pacientes");
         String html = "";
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -647,6 +665,7 @@ public class ObtenerInformacionPersonalResource {
         medicamentos = html;
         jb.add("medicamentos", medicamentos);
         System.out.println(medicamentos);
+        s.close();
         return Response.ok(jb.build()).build();
     }
 
@@ -654,11 +673,12 @@ public class ObtenerInformacionPersonalResource {
     @Path("/mostrarEnfermedadesCronicasPaciente")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mostrarEnfermedadesCronicasPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         System.out.println("--->Entro a ver enfermedades cronicas pacientes");
         String html = "";
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -713,6 +733,7 @@ public class ObtenerInformacionPersonalResource {
         enfermedadesCronicas = html;
         jb.add("enfermedadesCronicas", enfermedadesCronicas);
         System.out.println(enfermedadesCronicas);
+        s.close();
         return Response.ok(jb.build()).build();
     }
 

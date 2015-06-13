@@ -48,12 +48,12 @@ public class EnviarAlertaHospitalResource {
     private UriInfo context;
 
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
-   private final PeticionesSalientesDAO peticionSalienteDAO = new PeticionesSalientesDAO();
+    private final PeticionesSalientesDAO peticionSalienteDAO = new PeticionesSalientesDAO();
     private final HospitalDAO hospitalDAO = new HospitalDAO();
 
     private List<Usuarios> listUsuarios;
     private List<PeticionesSalientes> listPeticiones;
-    
+
     Usuarios userPaciente = new Usuarios();
     Pacientes paciente = new Pacientes();
     Contactos contacto = new Contactos();
@@ -64,9 +64,9 @@ public class EnviarAlertaHospitalResource {
     String longitudUsuario;
     String nombreUsuario;
     String nss;
-    
+
     String mensajeError = "";
-    
+
     String idPeticionSaliente;
     String prioridadAlta = "1";
     String prioridadMedia = "2";
@@ -74,9 +74,10 @@ public class EnviarAlertaHospitalResource {
     String statusPP = "PP";
     String estatus;
     String recuperarEstatus;
-    
+
     //campos json retorno
     private String estatusMensaje;
+
     /**
      * Creates a new instance of EnviarAlertaHospitalResource
      */
@@ -95,7 +96,7 @@ public class EnviarAlertaHospitalResource {
         System.out.println("--->Entro a datos pacientes");
         Boolean envioPeticion = false;
         String contactosPaciente = "";
-        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -126,7 +127,7 @@ public class EnviarAlertaHospitalResource {
         idPeticionSaliente = cal.get(Calendar.YEAR) + "" + (cal.get(Calendar.MONTH) + 1) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "" + cal.get(Calendar.MILLISECOND);
 
         //Buscamos el hospital que se encargara del paciente
-        hospital = hospitalDAO.findById(codigoHospital);
+        hospital = hospitalDAO.findById(s, codigoHospital);
 
         //Fecha de Registro
         Date date = new Date();
@@ -157,8 +158,8 @@ public class EnviarAlertaHospitalResource {
             System.out.println("Hay peticiones echas por el usuario: " + nombreUsuario);
             estatusMensaje = "peticionEnviada";
         }
-
-         jb.add("estatusMensaje", estatusMensaje);
+        s.close();
+        jb.add("estatusMensaje", estatusMensaje);
         return Response.ok(jb.build()).build();
     }
 

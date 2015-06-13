@@ -27,6 +27,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.hibernate.Session;
 import org.json.simple.JSONValue;
 
 /**
@@ -81,6 +82,7 @@ public class BuscarHospitalesResource {
     @Path("/buscarHospitales")
     @Produces(MediaType.APPLICATION_JSON)
     public Response buscarHospitales(@FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("distancia") String distanciaUsu) {
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
         latitudUsuario = latUsu;
         longitudUsuario = longUsu;
         distancia = distanciaUsu;
@@ -89,7 +91,7 @@ public class BuscarHospitalesResource {
         
         //Boolean hayHospitales = false;
         HospitalDAO hospitalDAO = new HospitalDAO();
-        listaTemp = (ArrayList<Hospitales>) hospitalDAO.findAll();
+        listaTemp = (ArrayList<Hospitales>) hospitalDAO.findAll(s);
 
         latUsuario = Double.parseDouble(latitudUsuario);
         longUsuario = Double.parseDouble(longitudUsuario);
@@ -138,6 +140,7 @@ public class BuscarHospitalesResource {
 
         if (listaHospitalesCercanos.isEmpty()) {
             estatusMensaje = "vacio";
+            s.close();
             return Response.ok(Json.createObjectBuilder().add("estatusMensaje", estatusMensaje).build()).build();
         } else {
             hospitalesCercanos = JSONValue.toJSONString(listaHospitalesCercanos);
@@ -148,7 +151,7 @@ public class BuscarHospitalesResource {
                 + "Longitud: " + Double.parseDouble(longitudUsuario) + "\n"
                 + "Distancia: " + Double.parseDouble(distancia));
         System.out.println("********************************************************************************");
-
+        s.close();
         jb.add("hospitalesCercanos", hospitalesCercanos);
         return Response.ok(jb.build()).build();
     }
