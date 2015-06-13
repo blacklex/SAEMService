@@ -5,14 +5,28 @@
  */
 package com.saem.alertas;
 
+import com.hibernate.dao.UsuarioDAO;
+import com.hibernate.model.Contactos;
+import com.hibernate.model.Hospitales;
+import com.hibernate.model.Pacientes;
+import com.hibernate.model.PeticionesSalientes;
+import com.hibernate.model.Usuarios;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * REST Web Service
@@ -25,14 +39,89 @@ public class ObtenerEstatusPeticionResource {
     @Context
     private UriInfo context;
 
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private List<Usuarios> listUsuarios;
+
+    Usuarios userPaciente = new Usuarios();
+    Pacientes paciente = new Pacientes();
+    Contactos contacto = new Contactos();
+    PeticionesSalientes peticionSaliente = new PeticionesSalientes();
+    Hospitales hospital = new Hospitales();
+    String codigoHospital;
+    String latitudUsuario;
+    String longitudUsuario;
+    String nombreUsuario;
+    String nss;
+
+    String mensajeError = "";
+
+    String idPeticionSaliente;
+    String prioridadAlta = "1";
+    String prioridadMedia = "2";
+    String prioridadBaja = "3";
+    String statusPP = "PP";
+    String estatus;
+    String recuperarEstatus;
+
     /**
      * Creates a new instance of ObtenerEstatusPeticionResource
      */
     public ObtenerEstatusPeticionResource() {
     }
 
+    @POST
+    @Path("/obtenerEstatusPeticion")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obtenerEstatusPeticion(@FormParam("nombreUsuario") String nombreUsu) {
+        nombreUsuario = nombreUsu;
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        listUsuarios = usuarioDAO.listarById(nombreUsuario);
+        for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
+            userPaciente = (Usuarios) iterator1.next();
+            Set pacientes = userPaciente.getPacienteses();
+            for (Iterator iterator2 = pacientes.iterator(); iterator2.hasNext();) {
+                paciente = (Pacientes) iterator2.next();
+                Set peticionesSalientes = paciente.getPeticionesSalienteses();
+                for (Iterator iterato3 = peticionesSalientes.iterator(); iterato3.hasNext();) {
+                    peticionSaliente = (PeticionesSalientes) iterato3.next();
+                    estatus = peticionSaliente.getEstatus();
+                }
+
+            }
+        }
+
+        if (estatus == null) {
+            System.out.println("no hay peticiones");
+        }
+
+        if (estatus.equals("PA")) {
+            System.out.println("Peticion atendida");
+            recuperarEstatus = estatus;
+        }
+
+        if (estatus.equals("PR")) {
+            System.out.println("Peticion Rechazada");
+            recuperarEstatus = estatus;
+        }
+
+        if (estatus.equals("PNA")) {
+            System.out.println("Peticion no atendida");
+            recuperarEstatus = estatus;
+        }
+
+        if (estatus.equals("PP")) {
+            System.out.println("Peticion pediente");
+            recuperarEstatus = estatus;
+        }
+        jb.add("recuperarEstatus", recuperarEstatus);
+        return Response.ok(jb.build()).build();
+
+    }
+
     /**
-     * Retrieves representation of an instance of com.saem.alertas.ObtenerEstatusPeticionResource
+     * Retrieves representation of an instance of
+     * com.saem.alertas.ObtenerEstatusPeticionResource
+     *
      * @return an instance of java.lang.String
      */
     @GET
@@ -43,7 +132,9 @@ public class ObtenerEstatusPeticionResource {
     }
 
     /**
-     * PUT method for updating or creating an instance of ObtenerEstatusPeticionResource
+     * PUT method for updating or creating an instance of
+     * ObtenerEstatusPeticionResource
+     *
      * @param content representation for the resource
      * @return an HTTP response with content of the updated or created resource.
      */

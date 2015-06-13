@@ -11,27 +11,48 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script type="text/javascript" src="jQuery-2.1.3.min.js"></script>
         <script type="text/javascript">
-            function recuperarEmail(){
-                
+            function recuperarEmail() {
+
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "http://192.168.0.8:8080/SAEMService/webresources/busquedaHospitales/sendemail",
+                    data: {"email": "alex"}
+                })
+                        .done(function (msg) {
+
+                            alert(msg.hola);
+                        });
+            }
+            
+            function recuperarDatosSesion(){
                  $.ajax({
             dataType: "json",
             method: "POST",
-            url: "http://192.168.0.8:8080/SAEMService/webresources/busquedaHospitales/sendemail",
-            data: {"email": "alex"}
-        })
-                .done(function (msg) {
-
-                    alert(msg.hola);
-                });
-            }
+            url: "http://192.168.0.8:8080/SAEMService/webresources/obtenerInformacionPersonal/mostrarDatosAccesoPaciente",
+            data: {nombreUsuario: "paciente22"}
+        }).done(function (msg) {
+            alert(msg.nombreUsuario+"  "+msg.clave);
             
+        });
+            }
+
         </script>
     </head>
     <body>
-        <div><form action="webresources/busquedaHospitales/sendemail" method="post">
-  <input type="text" id="email" name="email">
-  <button type="submit">Send</button>
-  <button type="button" onclick="recuperarEmail()">Send</button>
-</form> </div>
+        <div>
+            <form action="webresources/obtenerInformacionPersonal/mostrarAlergiasPaciente" method="post">
+                <input type="text" id="nombreUsuario" name="nombreUsuario">
+                <button type="submit">Send</button>
+            </form>
+            <button type="button" onclick="recuperarDatosSesion()">Send</button>
+        </div>
+            <div>
+                <form action="webresources/busquedaHospitales/sendemail" method="post">
+                    <input type="text" id="email" name="email">
+                    <button type="submit">Send</button>
+                    <button type="button" onclick="recuperarEmail()">Send</button>
+                </form> 
+            </div>
     </body>
 </html>

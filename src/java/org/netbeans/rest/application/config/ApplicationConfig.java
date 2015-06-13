@@ -12,7 +12,7 @@ import javax.ws.rs.core.Application;
  *
  * @author Alejandro
  */
-@javax.ws.rs.ApplicationPath("SAEMRecursos")
+@javax.ws.rs.ApplicationPath("webresources")
 public class ApplicationConfig extends Application {
 
     @Override
@@ -33,6 +33,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.saem.alertas.BuscarHospitalesResource.class);
         resources.add(com.saem.alertas.EnviarAlertaHospitalResource.class);
         resources.add(com.saem.alertas.ObtenerEstatusPeticionResource.class);
+        resources.add(com.saem.alertas.ObtenerInformacionPersonalResource.class);
     }
     
 }
