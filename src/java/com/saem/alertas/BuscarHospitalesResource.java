@@ -7,6 +7,7 @@ package com.saem.alertas;
 
 import com.hibernate.dao.HospitalDAO;
 import com.hibernate.model.Hospitales;
+import com.persistencia.owl.OWLConsultas;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -36,6 +37,9 @@ import org.json.simple.JSONValue;
 @Path("busquedaHospitales")
 public class BuscarHospitalesResource {
 
+    String ONTOLOGIA = request.getServletContext().getRealPath("/") + "WEB-INF/serviciomedico.owl";
+    String BASE_URI = "http://www.serviciomedico.org/ontologies/2014/serviciomedico";
+    
     String latitudUsuario;
     String longitudUsuario;
     String distancia;
@@ -82,9 +86,7 @@ public class BuscarHospitalesResource {
         distancia = distanciaUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         ArrayList<Hospitales> listaTemp = new ArrayList<Hospitales>();
-        String ONTOLOGIA = request.getServletContext().getRealPath("/") + "WEB-INF/serviciomedico.owl";
-        String BASE_URI = "http://www.serviciomedico.org/ontologies/2014/serviciomedico";
-
+        
         //Boolean hayHospitales = false;
         HospitalDAO hospitalDAO = new HospitalDAO();
         listaTemp = (ArrayList<Hospitales>) hospitalDAO.findAll();
