@@ -30,6 +30,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.saem.alertas.AcudiarHospitalResource.class);
+        resources.add(com.saem.alertas.AutenticarUsuarioResource.class);
         resources.add(com.saem.alertas.BuscarHospitalesResource.class);
         resources.add(com.saem.alertas.EnviarAlertaHospitalResource.class);
         resources.add(com.saem.alertas.ObtenerEstatusPeticionResource.class);
