@@ -6,6 +6,7 @@
 package com.saem.alertas;
 
 import com.hibernate.dao.UsuarioDAO;
+import com.hibernate.model.Pacientes;
 import com.hibernate.model.Usuarios;
 import java.text.ParseException;
 import javax.json.Json;
@@ -43,6 +44,7 @@ public class AutenticarUsuarioResource {
     private String tituloAlert = "";
     private String textoAlert = "";
     private String estatusMensaje = "";
+    private String codigoPaciente = "";
 
     /**
      * Creates a new instance of AutenticarUsuarioResource
@@ -53,10 +55,10 @@ public class AutenticarUsuarioResource {
     @POST
     @Path("/auntenticarUsuario")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response auntenticarUsuario(@FormParam("formNombreUsuario") String nombreUsu, @FormParam("formClave") String claveUsu) throws ParseException {
+    public Response auntenticarUsuario(@FormParam("formNombreUsuario") String formNombreUsuario, @FormParam("formClave") String formClave, @FormParam("formCodigoPaciente") String formCodigoPaciente) throws ParseException {
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         JsonObjectBuilder jb = Json.createObjectBuilder();
-        System.out.println("\n\nEntro al execute" + formNombreUsuario + "  " + formClave + "  " + formCheckRecordarme);
+        System.out.println("\n\nEntro al execute" + formNombreUsuario + "  " + formClave + "    " + formCodigoPaciente);
         Usuarios usuario = usuarioDAO.findById(s, formNombreUsuario);
 
         if (usuario == null) {
@@ -71,7 +73,19 @@ public class AutenticarUsuarioResource {
         }
 
         String nombreUsuario = usuario.getNombreUsuario();
+        String tipoUsuario = usuario.getTipoUsuario();
         String clave = usuario.getClave();
+
+        if (!tipoUsuario.equals("Paciente")) {
+            tituloAlert = "Error al Iniciar Sesion";
+            textoAlert = "El Usuario o Clave de Acceso no son validos.";
+            estatusMensaje = "errorLogin";
+            s.close();
+            jb.add("tituloAlert", tituloAlert);
+            jb.add("textoAlert", textoAlert);
+            jb.add("estatusMensaje", estatusMensaje);
+            return Response.ok(jb.build()).build();
+        }
 
         if (!(nombreUsuario.equals(formNombreUsuario) && clave.equals(formClave))) {
             tituloAlert = "Error al Iniciar Sesion";
@@ -83,10 +97,22 @@ public class AutenticarUsuarioResource {
             jb.add("estatusMensaje", estatusMensaje);
             return Response.ok(jb.build()).build();
         }
-
+        codigoPaciente = ((Pacientes) usuario.getPacienteses().iterator().next()).getNss();
+        if (codigoPaciente == null) {
+            codigoPaciente = "";
+        }
         tituloAlert = "Exito";
         textoAlert = "Exito";
         estatusMensaje = "exitoLogin";
+        if (formCodigoPaciente == null || formCodigoPaciente.equals("")) {
+            estatusMensaje = "exitoLoginINCP";
+            jb.add("codigoPaciente", codigoPaciente);
+        } else if (codigoPaciente.equals(formCodigoPaciente)) {
+            estatusMensaje = "exitoLoginCP";
+        } else {
+            estatusMensaje = "errorLogin";
+        }
+
         jb.add("tituloAlert", tituloAlert);
         jb.add("textoAlert", textoAlert);
         jb.add("estatusMensaje", estatusMensaje);
