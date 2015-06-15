@@ -107,6 +107,7 @@ public class EnviarAlertaHospitalResource {
                 nombreUsuario = userPaciente.getNombreUsuario();
                 Set contactos = paciente.getContactoses();
                 int i = 0;
+                System.out.println("---> "+nss+"  "+nombreUsuario);
                 for (Iterator iterator3 = contactos.iterator(); iterator3.hasNext();) {
                     contacto = (Contactos) iterator3.next();
                     if (contactos.size() == 1) {

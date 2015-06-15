@@ -5,12 +5,14 @@
  */
 package com.saem.alertas;
 
+import com.hibernate.dao.PeticionesSalientesDAO;
 import com.hibernate.dao.UsuarioDAO;
 import com.hibernate.model.Contactos;
 import com.hibernate.model.Hospitales;
 import com.hibernate.model.Pacientes;
 import com.hibernate.model.PeticionesSalientes;
 import com.hibernate.model.Usuarios;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +56,7 @@ public class ObtenerEstatusPeticionResource {
     String nombreUsuario;
     String nss;
     String idPet;
+    String comentario;
 
     String mensajeError = "";
 
@@ -75,6 +78,8 @@ public class ObtenerEstatusPeticionResource {
     @Path("/obtenerEstatusPeticion")
     @Produces(MediaType.APPLICATION_JSON)
     public Response obtenerEstatusPeticion(@FormParam("nombreUsuario") String nombreUsu, @FormParam("idPeticionS") String idPeticion) {
+        System.out.println("---->IDPET "+idPeticion);
+        System.out.println("---->IDUSU "+nombreUsu);
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
@@ -88,8 +93,10 @@ public class ObtenerEstatusPeticionResource {
                 for (Iterator iterato3 = peticionesSalientes.iterator(); iterato3.hasNext();) {
                     peticionSaliente = (PeticionesSalientes) iterato3.next();
                     if(peticionSaliente.getIdPeticionesSalientes().equals(idPeticion)) {
+                        System.out.println("-NSS-->"+paciente.getNss());
                         idPet = idPeticion;
                         estatus = peticionSaliente.getEstatus();
+                        comentario = peticionSaliente.getComentario();
                     }
                 }
 
@@ -113,7 +120,7 @@ public class ObtenerEstatusPeticionResource {
             recuperarEstatus = estatus;
         }
 
-        if (estatus.equals("PNA")) {
+        if (estatus.equals("PNR")) {
             System.out.println("Peticion no atendida");
             recuperarEstatus = estatus;
         }
@@ -122,12 +129,51 @@ public class ObtenerEstatusPeticionResource {
             System.out.println("Peticion pediente");
             recuperarEstatus = estatus;
         }
+        if(comentario==null)
+            comentario="";
+        
         s.close();
         jb.add("recuperarEstatus", recuperarEstatus);
+        jb.add("idPeticionSaliente", idPet);
+        jb.add("comentario", comentario);
         return Response.ok(jb.build()).build();
 
     }
 
+    
+    @POST
+    @Path("/obtenerEstatusPeticionInicio")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obtenerEstatusPeticionInicio(@FormParam("nombreUsuario") String nombreUsu) {
+        System.out.println("---> Entro a pet ini"+nombreUsu);
+        idPeticionSaliente="";
+        Session s = com.hibernate.cfg.HibernateUtil.getSession();
+        PeticionesSalientesDAO peticionesSalientesDAO = new PeticionesSalientesDAO();
+        nombreUsuario = nombreUsu;
+        String nss = ((Pacientes)usuarioDAO.findById(s, nombreUsuario).getPacienteses().iterator().next()).getNss();
+        System.out.println("nss "+nss);
+        if(nss==null)
+            nss="";
+          
+        JsonObjectBuilder jb = Json.createObjectBuilder();
+        
+        ArrayList<PeticionesSalientes> petSalPaciente = (ArrayList<PeticionesSalientes>) peticionesSalientesDAO.finByHospitalNss(s, nss);
+        if(petSalPaciente==null)
+            petSalPaciente = new ArrayList<PeticionesSalientes>();
+        
+        if(petSalPaciente.size()>0)
+            idPeticionSaliente = petSalPaciente.get(0).getIdPeticionesSalientes();
+        else{
+            jb.add("idPeticionSaliente", "");
+            return Response.ok(jb.build()).build();
+        }
+        System.out.println("---> id pet inicio. "+idPeticionSaliente);
+        s.close();
+        jb.add("idPeticionSaliente", idPeticionSaliente);
+        
+        return Response.ok(jb.build()).build();
+
+    }
     /**
      * Retrieves representation of an instance of
      * com.saem.alertas.ObtenerEstatusPeticionResource

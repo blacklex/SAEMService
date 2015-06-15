@@ -91,10 +91,11 @@ public class AcudiarHospitalResource {
     @POST
     @Path("/mostrarDatosAccesoPaciente")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response acudirAlHospital(@FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu) throws ParseException {
+    public Response acudirAlHospital(@FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu,@FormParam("codigoHospital") String codHosp) throws ParseException {
         nombreUsuario = nombreUsu;
         latitudUsuario = latUsu;
         longitudUsuario = longUsu;
+        codigoHospital=codHosp;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         Session s2 = com.hibernate.cfg.HibernateUtil.getSession();
