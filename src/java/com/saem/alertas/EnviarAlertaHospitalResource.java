@@ -134,7 +134,7 @@ public class EnviarAlertaHospitalResource {
         DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String fechaRegistro = hourdateFormat.format(date);
         date = hourdateFormat.parse(fechaRegistro);
-
+        
         peticionSaliente.setIdPeticionesSalientes(idPeticionSaliente);
         peticionSaliente.setFechaRegistro(date);
         peticionSaliente.setEstatus(statusPP);
