@@ -11,10 +11,10 @@
     
     <context-param>
         <param-name>ontologiaurl</param-name>
-        <param-value>/home/sergio/Escritorio/Git/TTSAEM/web/WEB-INF/serviciomedico.owl</param-value>
+        <param-value>C:\Users\Alejandro\Documents\GitHub\TT2-SAEM\build\web\WEB-INF\serviciomedico.owl</param-value>
     </context-param>
     <context-param>
         <param-name>ontologifoaf</param-name>
-        <param-value>/home/sergio/Escritorio/Git/TTSAEM/web/WEB-INF/foaf.rdf</param-value>
+        <param-value>C:\Users\Alejandro\Documents\GitHub\TT2-SAEM\build\web\WEB-INF\foaf.rdf</param-value>
     </context-param>
 </web-app>

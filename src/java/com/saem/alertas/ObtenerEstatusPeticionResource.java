@@ -98,6 +98,9 @@ public class ObtenerEstatusPeticionResource {
 
         if (estatus == null) {
             System.out.println("no hay peticiones");
+            s.close();
+            jb.add("recuperarEstatus", "");
+            return Response.ok(jb.build()).build();
         }
 
         if (estatus.equals("PA")) {

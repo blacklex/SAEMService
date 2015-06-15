@@ -127,6 +127,7 @@ public class BuscarHospitalesResource {
                 hospitales.put("ln", longitudX);
                 hospitales.put("titulo", nombreHospital);
                 hospitales.put("codigo", hospTem.getCodigoHospital());
+                hospitales.put("tel", hospTem.getLada()+"-"+hospTem.getTelefono());
                 listaHospitalesCercanos.add(hospitales);
 
                 System.out.println("El hospital " + nombreHospital + " esta dentro de la zona");

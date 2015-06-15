@@ -87,10 +87,11 @@ public class EnviarAlertaHospitalResource {
     @POST
     @Path("/enviarAlertaHospital")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response enviarAlertaHospital(@FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu) throws ParseException {
+    public Response enviarAlertaHospital(@FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu,@FormParam("codigoHospital") String codigoHosp) throws ParseException {
         nombreUsuario = nombreUsu;
         latitudUsuario = latUsu;
         longitudUsuario = longUsu;
+        codigoHospital = codigoHosp;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         System.out.println("--->Entro a datos pacientes");
@@ -146,7 +147,7 @@ public class EnviarAlertaHospitalResource {
         peticionSaliente.setPacientes(paciente);
 
         listPeticiones = peticionSalienteDAO.finByHospitalNss(s, nss);
-
+        
         if (listPeticiones.isEmpty()) {
             if (peticionSalienteDAO.save(peticionSaliente)) {
                 jb.add("idPeticionSaliente", idPeticionSaliente);
