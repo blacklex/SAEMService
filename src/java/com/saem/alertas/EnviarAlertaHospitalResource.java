@@ -149,6 +149,7 @@ public class EnviarAlertaHospitalResource {
 
         if (listPeticiones.isEmpty()) {
             if (peticionSalienteDAO.save(peticionSaliente)) {
+                jb.add("idPeticionSaliente", idPeticionSaliente);
                 estatusMensaje = "exito";
             } else {
                 estatusMensaje = "error";

@@ -53,6 +53,7 @@ public class ObtenerEstatusPeticionResource {
     String longitudUsuario;
     String nombreUsuario;
     String nss;
+    String idPet;
 
     String mensajeError = "";
 
@@ -73,7 +74,7 @@ public class ObtenerEstatusPeticionResource {
     @POST
     @Path("/obtenerEstatusPeticion")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response obtenerEstatusPeticion(@FormParam("nombreUsuario") String nombreUsu) {
+    public Response obtenerEstatusPeticion(@FormParam("nombreUsuario") String nombreUsu, @FormParam("idPeticionS") String idPeticion) {
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
@@ -86,7 +87,10 @@ public class ObtenerEstatusPeticionResource {
                 Set peticionesSalientes = paciente.getPeticionesSalienteses();
                 for (Iterator iterato3 = peticionesSalientes.iterator(); iterato3.hasNext();) {
                     peticionSaliente = (PeticionesSalientes) iterato3.next();
-                    estatus = peticionSaliente.getEstatus();
+                    if(peticionSaliente.getIdPeticionesSalientes().equals(idPeticion)) {
+                        idPet = idPeticion;
+                        estatus = peticionSaliente.getEstatus();
+                    }
                 }
 
             }
