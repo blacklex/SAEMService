@@ -13,9 +13,12 @@ import com.hibernate.model.Hospitales;
 import com.hibernate.model.Pacientes;
 import com.hibernate.model.PeticionesSalientes;
 import com.hibernate.model.Usuarios;
+import com.saem.foaf.ConsultorFOAF;
+import com.saem.foaf.PersonaFOAF;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -87,7 +91,8 @@ public class EnviarAlertaHospitalResource {
     @POST
     @Path("/enviarAlertaHospital")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response enviarAlertaHospital(@FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu,@FormParam("codigoHospital") String codigoHosp) throws ParseException {
+    public Response enviarAlertaHospital(@Context HttpServletRequest servletRequest, @FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("codigoHospital") String codigoHosp) throws ParseException {
+        String ONTOLOGIA = servletRequest.getSession().getServletContext().getInitParameter("ontologifoaf");
         nombreUsuario = nombreUsu;
         latitudUsuario = latUsu;
         longitudUsuario = longUsu;
@@ -105,20 +110,41 @@ public class EnviarAlertaHospitalResource {
                 paciente = (Pacientes) iterator2.next();
                 nss = paciente.getNss();
                 nombreUsuario = userPaciente.getNombreUsuario();
-                Set contactos = paciente.getContactoses();
+
+                ConsultorFOAF consultorFOAF = new ConsultorFOAF(nombreUsuario, ONTOLOGIA);
+                ArrayList<PersonaFOAF> amigos = consultorFOAF.consultarAmigos();
+
+                if (amigos == null) {
+                    amigos = new ArrayList<PersonaFOAF>();
+                }
+
                 int i = 0;
-                System.out.println("---> "+nss+"  "+nombreUsuario);
-                for (Iterator iterator3 = contactos.iterator(); iterator3.hasNext();) {
-                    contacto = (Contactos) iterator3.next();
-                    if (contactos.size() == 1) {
-                        contactosPaciente += contacto.getCelular();
+                for (PersonaFOAF amigo : amigos) {
+                    if (amigos.size() == 1) {
+                        contactosPaciente += amigo.getTelefonoPersona();
                     } else if (i == 0) {
-                        contactosPaciente += contacto.getCelular();
+                        contactosPaciente += amigo.getTelefonoPersona();
                         i++;
                     } else {
-                        contactosPaciente += "," + contacto.getCelular();
+                        contactosPaciente += "," + amigo.getTelefonoPersona();
                     }
+
                 }
+
+                /*Set contactos = paciente.getContactoses();
+                 int i = 0;
+                 System.out.println("---> "+nss+"  "+nombreUsuario);
+                 for (Iterator iterator3 = contactos.iterator(); iterator3.hasNext();) {
+                 contacto = (Contactos) iterator3.next();
+                 if (contactos.size() == 1) {
+                 contactosPaciente += contacto.getCelular();
+                 } else if (i == 0) {
+                 contactosPaciente += contacto.getCelular();
+                 i++;
+                 } else {
+                 contactosPaciente += "," + contacto.getCelular();
+                 }
+                 }*/
             }
         }
 //        System.out.println(contactosPaciente);
@@ -136,7 +162,7 @@ public class EnviarAlertaHospitalResource {
         DateFormat hourdateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String fechaRegistro = hourdateFormat.format(date);
         date = hourdateFormat.parse(fechaRegistro);
-        
+
         peticionSaliente.setIdPeticionesSalientes(idPeticionSaliente);
         peticionSaliente.setFechaRegistro(date);
         peticionSaliente.setEstatus(statusPP);
@@ -148,7 +174,7 @@ public class EnviarAlertaHospitalResource {
         peticionSaliente.setPacientes(paciente);
 
         listPeticiones = peticionSalienteDAO.finByHospitalNss(s, nss);
-        
+
         if (listPeticiones.isEmpty()) {
             if (peticionSalienteDAO.save(peticionSaliente)) {
                 jb.add("idPeticionSaliente", idPeticionSaliente);

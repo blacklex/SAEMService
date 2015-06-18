@@ -6,9 +6,15 @@
 package com.saem.alertas;
 
 import com.hibernate.dao.HospitalDAO;
+import com.hibernate.dao.UsuarioDAO;
+import com.hibernate.model.DatosClinicos;
+import com.hibernate.model.EnfermedadesCronicas;
 import com.hibernate.model.Hospitales;
+import com.hibernate.model.Pacientes;
+import com.hibernate.model.Usuarios;
 import com.persistencia.owl.OWLConsultas;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,7 +87,7 @@ public class BuscarHospitalesResource {
     @POST
     @Path("/buscarHospitales")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarHospitales(@Context HttpServletRequest servletRequest,@FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("distancia") String distanciaUsu) {
+    public Response buscarHospitales(@Context HttpServletRequest servletRequest,@FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("distancia") String distanciaUsu, @FormParam("nombreUsuario") String nombreUsuario) {
         String ONTOLOGIA =servletRequest.getSession().getServletContext().getInitParameter("ontologiaurl");
         
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
@@ -90,6 +96,8 @@ public class BuscarHospitalesResource {
         distancia = distanciaUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         ArrayList<Hospitales> listaTemp = new ArrayList<Hospitales>();
+        ArrayList<EnfermedadesCronicas> listaPacienteEnfermedades = new ArrayList<EnfermedadesCronicas>();
+        
         
         //Boolean hayHospitales = false;
         HospitalDAO hospitalDAO = new HospitalDAO();
@@ -98,6 +106,27 @@ public class BuscarHospitalesResource {
         latUsuario = Double.parseDouble(latitudUsuario);
         longUsuario = Double.parseDouble(longitudUsuario);
         distanciaRango = Double.parseDouble(distancia);
+        
+        //-----------RECUPERAR ENFERMEDADES DEL PACIENTE --------------------
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Usuarios pacienteUsuario = usuarioDAO.findById(s,nombreUsuario);
+        
+        Pacientes paciente = (Pacientes) pacienteUsuario.getPacienteses().iterator().next();
+        
+        DatosClinicos pacienteDatosClinicos  = (DatosClinicos) paciente.getDatosClinicoses().iterator().next();
+        Iterator pacienteEnfermedades = pacienteDatosClinicos.getEnfermedadesCronicases().iterator();
+        
+        while(pacienteEnfermedades.hasNext()){
+            EnfermedadesCronicas enfermedad = (EnfermedadesCronicas) pacienteEnfermedades.next();
+            listaPacienteEnfermedades.add(enfermedad);
+        }
+        
+        if(listaPacienteEnfermedades==null)
+            listaPacienteEnfermedades = new ArrayList<EnfermedadesCronicas>();
+        else if(listaPacienteEnfermedades.isEmpty())
+            listaPacienteEnfermedades = new ArrayList<EnfermedadesCronicas>();
+        
+        //-----------FIN RECUPERAR ENFERMEDADES DEL PACIENTE ----------------
 
         for (Hospitales hospTem : listaTemp) {
             String nombreHospital = hospTem.getNombre();
@@ -128,6 +157,21 @@ public class BuscarHospitalesResource {
                 hospitales.put("titulo", nombreHospital);
                 hospitales.put("codigo", hospTem.getCodigoHospital());
                 hospitales.put("tel", hospTem.getLada()+"-"+hospTem.getTelefono());
+                hospitales.put("atiendeEnfermedad", "0");
+                ArrayList<String> listaEnfermedadesHospital = (ArrayList<String>) consultor.hospitalAtiendeEnfermedad(nombreHospitalTemp);
+                if(listaEnfermedadesHospital==null)
+                    listaEnfermedadesHospital = new ArrayList<String>();
+                
+                for(String enfermedadHospTemp : listaEnfermedadesHospital){
+                    for(EnfermedadesCronicas enfermedadPaacienteTemp : listaPacienteEnfermedades){
+                        if(enfermedadHospTemp.equals(enfermedadPaacienteTemp.getNombre())){
+                            hospitales.remove("atiendeEnfermedad");
+                            hospitales.put("atiendeEnfermedad", "1");
+                            break;
+                        }
+                    }
+                }
+             
                 listaHospitalesCercanos.add(hospitales);
 
                 System.out.println("El hospital " + nombreHospital + " esta dentro de la zona");

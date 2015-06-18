@@ -14,9 +14,12 @@ import com.hibernate.model.Hospitales;
 import com.hibernate.model.Pacientes;
 import com.hibernate.model.PeticionesEntrantes;
 import com.hibernate.model.Usuarios;
+import com.saem.foaf.ConsultorFOAF;
+import com.saem.foaf.PersonaFOAF;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -91,18 +95,19 @@ public class AcudiarHospitalResource {
     @POST
     @Path("/mostrarDatosAccesoPaciente")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response acudirAlHospital(@FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu,@FormParam("codigoHospital") String codHosp) throws ParseException {
+    public Response acudirAlHospital(@Context HttpServletRequest servletRequest, @FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("codigoHospital") String codHosp) throws ParseException {
+        String ONTOLOGIA = servletRequest.getSession().getServletContext().getInitParameter("ontologifoaf");
         nombreUsuario = nombreUsu;
         latitudUsuario = latUsu;
         longitudUsuario = longUsu;
-        codigoHospital=codHosp;
+        codigoHospital = codHosp;
         JsonObjectBuilder jb = Json.createObjectBuilder();
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         Session s2 = com.hibernate.cfg.HibernateUtil.getSession();
         System.out.println("--->Entro a datos pacientes");
         Boolean envioPeticion = false;
         String contactosPaciente = "";
-        listUsuarios = usuarioDAO.listarById(s2,nombreUsuario);
+        listUsuarios = usuarioDAO.listarById(s2, nombreUsuario);
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             Set pacientes = userPaciente.getPacienteses();
@@ -110,19 +115,40 @@ public class AcudiarHospitalResource {
                 paciente = (Pacientes) iterator2.next();
                 nss = paciente.getNss();
                 nombreUsuario = userPaciente.getNombreUsuario();
-                Set contactos = paciente.getContactoses();
+
+                ConsultorFOAF consultorFOAF = new ConsultorFOAF(nombreUsuario, ONTOLOGIA);
+                ArrayList<PersonaFOAF> amigos = consultorFOAF.consultarAmigos();
+
+                if (amigos == null) {
+                    amigos = new ArrayList<PersonaFOAF>();
+                }
+
                 int i = 0;
-                for (Iterator iterator3 = contactos.iterator(); iterator3.hasNext();) {
-                    contacto = (Contactos) iterator3.next();
-                    if (contactos.size() == 1) {
-                        contactosPaciente += contacto.getCelular();
+                for (PersonaFOAF amigo : amigos) {
+                    if (amigos.size() == 1) {
+                        contactosPaciente += amigo.getTelefonoPersona();
                     } else if (i == 0) {
-                        contactosPaciente += contacto.getCelular();
+                        contactosPaciente += amigo.getTelefonoPersona();
                         i++;
                     } else {
-                        contactosPaciente += "," + contacto.getCelular();
+                        contactosPaciente += "," + amigo.getTelefonoPersona();
                     }
+
                 }
+
+                /*Set contactos = paciente.getContactoses();
+                 int i = 0;
+                 for (Iterator iterator3 = contactos.iterator(); iterator3.hasNext();) {
+                 contacto = (Contactos) iterator3.next();
+                 if (contactos.size() == 1) {
+                 contactosPaciente += contacto.getCelular();
+                 } else if (i == 0) {
+                 contactosPaciente += contacto.getCelular();
+                 i++;
+                 } else {
+                 contactosPaciente += "," + contacto.getCelular();
+                 }
+                 }*/
             }
         }
 //        System.out.println(contactosPaciente);
@@ -133,7 +159,7 @@ public class AcudiarHospitalResource {
         idPeticionEntrante = cal.get(Calendar.YEAR) + "" + (cal.get(Calendar.MONTH) + 1) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "" + cal.get(Calendar.MILLISECOND);
 
         //Buscamos el hospital que se encargara del paciente
-        hospital = hospitalDAO.findById(s2,codigoHospital);
+        hospital = hospitalDAO.findById(s2, codigoHospital);
 
         //Fecha de Registro
         Date date = new Date();

@@ -28,7 +28,7 @@
       </key>
       <one-to-many class="com.hibernate.model.DomicilioHospitales"/>
     </set>
-    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="peticionesSalienteses" table="Peticiones_Salientes">
+    <set fetch="select" inverse="true" lazy="true" name="peticionesSalienteses" table="Peticiones_Salientes">
       <key>
         <column length="20" name="Hospitales_codigo_hospital" not-null="true"/>
       </key>
@@ -48,13 +48,13 @@
         <column name="Especialidades_no_especialidad" not-null="true"/>
       </many-to-many>
     </set>
-    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="peticionesEntranteses" table="Peticiones_Entrantes">
+    <set fetch="select" inverse="true" lazy="true" name="peticionesEntranteses" table="Peticiones_Entrantes">
       <key>
         <column length="20" name="Hospitales_codigo_hospital" not-null="true"/>
       </key>
       <one-to-many class="com.hibernate.model.PeticionesEntrantes"/>
     </set>
-    <set fetch="select" cascade="delete" inverse="true" lazy="true" name="pacienteses" table="Pacientes">
+    <set fetch="select" inverse="true" lazy="true" name="pacienteses" table="Pacientes">
       <key>
         <column length="20" name="Hospitales_codigo_hospital" not-null="true"/>
       </key>
