@@ -694,23 +694,17 @@ public class ObtenerInformacionPersonalResource {
                         Date inicioEnfermedad = enfermedadCronica.getIncioEnfermedad();
                         DateFormat hourdateFormat = new SimpleDateFormat("dd/MM/yyyy");
                         String inicioEnfermedadFormato = hourdateFormat.format(inicioEnfermedad);
-                        String enfermedad = enfermedadCronica.getTipo();
+                        String tipoEspecialidad = enfermedadCronica.getTipo();
                         html += "<div id=\"enfermedadesCronicas" + index + "\" class=\"row\">" + "\n"
                                 + "   <div class=\"col-lg-4\">" + "\n"
                                 + "       <div style=\"margin-bottom:10px;\" class=\"form-group\">" + "\n"
-                                + "           <label>Nombre enfermedad #" + (index + 1) + " : </label>" + "\n"
-                                + "           <input readonly=\"true\" class=\"form-control\" type=\"text\" name=\"enfermedadCronica" + index + "\" id=\"enfermedadCronica" + index + "\" value=\"" + enfermedadCronica.getNombre() + "\" placeholder=\"Nombre enfermedad" + index + "\" />" + "\n"
+                                + "           <label>Enfermedad</label>" + "\n"
+                                + "           <input disabled class=\"form-control\" type=\"text\" name=\"enfermedadCronica" + index + "\" id=\"enfermedadCronica" + index + "\" value=\"" + enfermedadCronica.getNombre() + "\" placeholder=\"Nombre enfermedad" + index + "\" />" + "\n"
                                 + "       </div>" + "\n"
                                 + "   </div>" + "\n"
                                 + "   <div class=\"col-lg-4\">" + "\n"
-                                + "       <label>Tipo</label>" + "\n"
-                                + "       <select readonly=\"true\" name=\"tipoEnfermedad" + index + "\" class=\"form-control\">" + "\n"
-                                + "           <option value=\"-1\">Seleccionar</option>" + "\n"
-                                + "           <option value=\"diabetes\" " + ((enfermedad.equals("diabetes")) ? "selected" : "") + ">Diabetes</option>" + "\n"
-                                + "           <option value=\"cardiovascular\" " + ((enfermedad.equals("cardiovascular")) ? "selected" : "") + ">Enfermedades cardiovasculares</option>" + "\n"
-                                + "           <option value=\"obesidad\" " + ((enfermedad.equals("obesidad")) ? "selected" : "") + ">Obesidad</option>" + "\n"
-                                + "           <option value=\"cancer\"  " + ((enfermedad.equals("cancer")) ? "selected" : "") + ">Cáncer</option>" + "\n"
-                                + "           <option value=\"dislipidemias\" " + ((enfermedad.equals("dislipidemias")) ? "selected" : "") + ">Dislipidemias</option>" + "\n"
+                                + "       <label>Especialidad </label>" + "\n"
+                                + "       <input  disabled name=\"tipoEnfermedad" + index + "\" class=\"form-control\"value=\""+ tipoEspecialidad +"\" type=\"text\"/>" + "\n"
                                 + "       </select>" + "\n"
                                 + "   </div>" + "\n"
                                 + "   <div class=\"col-lg-4\">" + "\n"
