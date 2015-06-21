@@ -167,7 +167,8 @@ public class ObtenerInformacionPersonalResource {
         for (Iterator iterator1 = listUsuarios.iterator(); iterator1.hasNext();) {
             userPaciente = (Usuarios) iterator1.next();
             nombreUsuario = userPaciente.getNombreUsuario();
-            clave = userPaciente.getClave();
+            //clave = userPaciente.getClave();
+            clave="";
             jb.add("nombreUsuario", nombreUsuario);
             jb.add("clave", clave);
 

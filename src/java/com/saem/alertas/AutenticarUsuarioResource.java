@@ -8,6 +8,7 @@ package com.saem.alertas;
 import com.hibernate.dao.UsuarioDAO;
 import com.hibernate.model.Pacientes;
 import com.hibernate.model.Usuarios;
+import com.saem.criptoSHA256.EncriptadorSHA256;
 import java.text.ParseException;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -86,6 +87,7 @@ public class AutenticarUsuarioResource {
             jb.add("estatusMensaje", estatusMensaje);
             return Response.ok(jb.build()).build();
         }
+        formClave = new EncriptadorSHA256(formClave).encriptarCadena();
 
         if (!(nombreUsuario.equals(formNombreUsuario) && clave.equals(formClave))) {
             tituloAlert = "Error al Iniciar Sesion";
