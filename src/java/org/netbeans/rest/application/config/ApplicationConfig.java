@@ -32,6 +32,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.saem.alertas.AcudiarHospitalResource.class);
         resources.add(com.saem.alertas.AutenticarUsuarioResource.class);
         resources.add(com.saem.alertas.BuscarHospitalesResource.class);
+        resources.add(com.saem.alertas.BusquedaMejorHospitalResource.class);
         resources.add(com.saem.alertas.EnviarAlertaHospitalResource.class);
         resources.add(com.saem.alertas.ObtenerEstatusPeticionResource.class);
         resources.add(com.saem.alertas.ObtenerInformacionPersonalResource.class);
