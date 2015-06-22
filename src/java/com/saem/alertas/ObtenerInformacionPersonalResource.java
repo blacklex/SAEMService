@@ -20,6 +20,7 @@ import com.hibernate.model.Medicacion;
 import com.hibernate.model.Pacientes;
 import com.hibernate.model.TelefonosPacientes;
 import com.hibernate.model.Usuarios;
+import com.persistencia.owl.OWLConsultas;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,6 +33,7 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -673,7 +675,7 @@ public class ObtenerInformacionPersonalResource {
     @POST
     @Path("/mostrarEnfermedadesCronicasPaciente")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response mostrarEnfermedadesCronicasPaciente(@FormParam("nombreUsuario") String nombreUsu) {
+    public Response mostrarEnfermedadesCronicasPaciente(@Context HttpServletRequest servletRequest,@FormParam("nombreUsuario") String nombreUsu) {
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         nombreUsuario = nombreUsu;
         JsonObjectBuilder jb = Json.createObjectBuilder();
@@ -696,11 +698,15 @@ public class ObtenerInformacionPersonalResource {
                         DateFormat hourdateFormat = new SimpleDateFormat("dd/MM/yyyy");
                         String inicioEnfermedadFormato = hourdateFormat.format(inicioEnfermedad);
                         String tipoEspecialidad = enfermedadCronica.getTipo();
+                        String ONTOLOGIA =servletRequest.getSession().getServletContext().getInitParameter("ontologiaurl"); 
+                        String BASE_URI = "http://www.serviciomedico.org/ontologies/2014/serviciomedico";
+                        OWLConsultas consultor = new OWLConsultas(ONTOLOGIA, BASE_URI);
+                        String nombreCompletoEnfermedad = consultor.getNombreEnfermedad(enfermedadCronica.getNombre());
                         html += "<div id=\"enfermedadesCronicas" + index + "\" class=\"row\">" + "\n"
                                 + "   <div class=\"col-lg-4\">" + "\n"
                                 + "       <div style=\"margin-bottom:10px;\" class=\"form-group\">" + "\n"
                                 + "           <label>Enfermedad</label>" + "\n"
-                                + "           <input disabled class=\"form-control\" type=\"text\" name=\"enfermedadCronica" + index + "\" id=\"enfermedadCronica" + index + "\" value=\"" + enfermedadCronica.getNombre() + "\" placeholder=\"Nombre enfermedad" + index + "\" />" + "\n"
+                                + "           <input disabled class=\"form-control\" type=\"text\" name=\"enfermedadCronica" + index + "\" id=\"enfermedadCronica" + index + "\" value=\"" + nombreCompletoEnfermedad + "\" placeholder=\"Nombre enfermedad" + index + "\" />" + "\n"
                                 + "       </div>" + "\n"
                                 + "   </div>" + "\n"
                                 + "   <div class=\"col-lg-4\">" + "\n"
