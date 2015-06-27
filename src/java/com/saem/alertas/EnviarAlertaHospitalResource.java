@@ -15,6 +15,8 @@ import com.hibernate.model.PeticionesSalientes;
 import com.hibernate.model.Usuarios;
 import com.saem.foaf.ConsultorFOAF;
 import com.saem.foaf.PersonaFOAF;
+import com.saem.notificadores.NotificadorSMS;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,8 +93,9 @@ public class EnviarAlertaHospitalResource {
     @POST
     @Path("/enviarAlertaHospital")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response enviarAlertaHospital(@Context HttpServletRequest servletRequest, @FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("codigoHospital") String codigoHosp) throws ParseException {
+    public Response enviarAlertaHospital(@Context HttpServletRequest servletRequest, @FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("codigoHospital") String codigoHosp) throws ParseException, UnsupportedEncodingException {
         String ONTOLOGIA = servletRequest.getSession().getServletContext().getInitParameter("ontologifoaf");
+        String nombrePaciente="";
         nombreUsuario = nombreUsu;
         latitudUsuario = latUsu;
         longitudUsuario = longUsu;
@@ -110,7 +113,7 @@ public class EnviarAlertaHospitalResource {
                 paciente = (Pacientes) iterator2.next();
                 nss = paciente.getNss();
                 nombreUsuario = userPaciente.getNombreUsuario();
-
+                nombrePaciente=paciente.getNombre();
                 ConsultorFOAF consultorFOAF = new ConsultorFOAF(nombreUsuario, ONTOLOGIA);
                 ArrayList<PersonaFOAF> amigos = consultorFOAF.consultarAmigos();
 
@@ -147,9 +150,17 @@ public class EnviarAlertaHospitalResource {
                  }*/
             }
         }
+        
+        //Buscamos el hospital que se encargara del paciente
+        hospital = hospitalDAO.findById(s, codigoHospital);
+        String nombreHospital = hospital.getNombre();
+        String lada = hospital.getLada();
+        String numHospital = hospital.getTelefono();
+
+        String dirHospital = "SAEM:Estoy en " + nombreHospital + ", tel " + lada + numHospital + ". " + nombrePaciente;
 //        System.out.println(contactosPaciente);
-//        NotificadorSMS sms = new NotificadorSMS("Estoy en este este lugar", contactosPaciente);
-//        sms.enviarSMS();
+          NotificadorSMS sms = new NotificadorSMS(dirHospital, contactosPaciente);
+          sms.enviarSMS();
         //Generamos el codigo de Historial Clinico
         Calendar cal = Calendar.getInstance();
         idPeticionSaliente = cal.get(Calendar.YEAR) + "" + (cal.get(Calendar.MONTH) + 1) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "" + cal.get(Calendar.MILLISECOND);

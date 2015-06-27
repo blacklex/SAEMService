@@ -16,6 +16,8 @@ import com.hibernate.model.PeticionesEntrantes;
 import com.hibernate.model.Usuarios;
 import com.saem.foaf.ConsultorFOAF;
 import com.saem.foaf.PersonaFOAF;
+import com.saem.notificadores.NotificadorSMS;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -95,12 +97,13 @@ public class AcudiarHospitalResource {
     @POST
     @Path("/mostrarDatosAccesoPaciente")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response acudirAlHospital(@Context HttpServletRequest servletRequest, @FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("codigoHospital") String codHosp) throws ParseException {
+    public Response acudirAlHospital(@Context HttpServletRequest servletRequest, @FormParam("nombreUsuario") String nombreUsu, @FormParam("latitudUsuario") String latUsu, @FormParam("longitudUsuario") String longUsu, @FormParam("codigoHospital") String codHosp) throws ParseException, UnsupportedEncodingException {
         String ONTOLOGIA = servletRequest.getSession().getServletContext().getInitParameter("ontologifoaf");
         nombreUsuario = nombreUsu;
         latitudUsuario = latUsu;
         longitudUsuario = longUsu;
         codigoHospital = codHosp;
+        String nombrePaciente="";
         JsonObjectBuilder jb = Json.createObjectBuilder();
         Session s = com.hibernate.cfg.HibernateUtil.getSession();
         Session s2 = com.hibernate.cfg.HibernateUtil.getSession();
@@ -115,7 +118,7 @@ public class AcudiarHospitalResource {
                 paciente = (Pacientes) iterator2.next();
                 nss = paciente.getNss();
                 nombreUsuario = userPaciente.getNombreUsuario();
-
+                nombrePaciente=paciente.getNombre();
                 ConsultorFOAF consultorFOAF = new ConsultorFOAF(nombreUsuario, ONTOLOGIA);
                 ArrayList<PersonaFOAF> amigos = consultorFOAF.consultarAmigos();
 
@@ -151,9 +154,17 @@ public class AcudiarHospitalResource {
                  }*/
             }
         }
+//         
+        //Buscamos el hospital que se encargara del paciente
+        hospital = hospitalDAO.findById(s, codigoHospital);
+        String nombreHospital = hospital.getNombre();
+        String lada = hospital.getLada();
+        String numHospital = hospital.getTelefono();
+
+        String dirHospital = "SAEM:Estoy en " + nombreHospital + ", tel " + lada + numHospital + ". " + nombrePaciente;
 //        System.out.println(contactosPaciente);
-//        NotificadorSMS sms = new NotificadorSMS("Estoy en este Hospital", contactosPaciente);
-//        sms.enviarSMS();
+          NotificadorSMS sms = new NotificadorSMS(dirHospital, contactosPaciente);
+          sms.enviarSMS();
         //Generamos el codigo de Historial Clinico
         Calendar cal = Calendar.getInstance();
         idPeticionEntrante = cal.get(Calendar.YEAR) + "" + (cal.get(Calendar.MONTH) + 1) + "" + cal.get(Calendar.DAY_OF_MONTH) + "" + cal.get(Calendar.HOUR) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND) + "" + cal.get(Calendar.MILLISECOND);
